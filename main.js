@@ -37,9 +37,36 @@ for (const celltartalom of theadercella){
 const tablebody=document.createElement("tbody"); // letrehoz egy tbody elemet
 table1.appendChild(tablebody); // hozzaadja a tbody elemet a tablazathoz
 
+const form1 = document.createElement("form"); // letrehoz egy form elemet
+formDiv.appendChild(form1); // hozzaadja a form1 elemet a formdivhez
+const fieldElementLista= [{ // letrehoz egy tombot a form elemeihez
+    fieldid:'forradalom', // letrehoz egy forradalom id-t
+    fieldlabel:'forradalom' // letrehoz egy forradalom labelt
+},{
+    fieldid:'evszam', // letrehoz egy evszam id-t
+    fieldlabel:'evszam' // letrehoz egy evszam labelt
+},{ 
+    fieldid:'sikeres', // letrehoz egy sikeres id-t
+    fieldlabel:'sikeres' // letrehoz egy sikeres labelt
+}]
 
+for (const fieldelem of fieldElementLista) // a tomb elemein vegigmegyunk
+{
+    const field = Div('field'); // letrehoz egy field elemet
+    form1.appendChild(field); // hozzaadja a field elemet a formhoz
+    const label = document.createElement('label'); // letrehoz egy label elemet
+    label.htmlFor = fieldelem.fieldid; // beallitja a label htmlfor erteket
+    label.textContent = fieldelem.fieldlabel; // beallitja a label szoveget
+    field.appendChild(label); // hozzaadja a label elemet a fieldhez
+    const input = document.createElement('input'); // letrehoz egy input elemet
+    input.id = fieldelem.fieldid; // beallitja az input idt
+    field.appendChild(input); // hozzaadja az input elemet a fieldhez
+} 
 
+const button = document.createElement('button'); // letrehoz egy button elemet
+button.textContent = 'hozzaad'; // beallitja a button tipusat
 
+form1.appendChild(button); // hozzaadja a button elemet a formhoz
 
 // Hozzaadja a table div elemet a container divhez
 containerDiv.appendChild(tableDiv);
