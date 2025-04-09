@@ -65,7 +65,6 @@ for (const fieldelem of fieldElementLista) // a tomb elemein vegigmegyunk
 
 const button = document.createElement('button'); // letrehoz egy button elemet
 button.textContent = 'hozzaad'; // beallitja a button tipusat
-
 form1.appendChild(button); // hozzaadja a button elemet a formhoz
 
 // Hozzaadja a table div elemet a container divhez

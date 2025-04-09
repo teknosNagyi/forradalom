@@ -54,3 +54,34 @@ class Table extends Area {
         table.appendChild(tablebody);// hozzaadja a tbody elemet a tablazathoz
     }
 }
+
+class Form extends Area {
+    constructor(Class) {//constructor letrehozasa Class parameterrel
+        super(Class);//meghivja a szulo osztaly konstruktorat
+        const form = document.createElement('form');//letrehozza a formot
+        this.div.appendChild(form);//hozzaadja a formot a divhez
+        const fieldElementLista = [{// letrehoz egy tombot a form elemeihez
+            fieldid: 'forradalom', // letrehoz egy forradalom id-t
+            fieldlabel: 'forradalom' // letrehoz egy forradalom labelt
+        }, {
+            fieldid: 'evszam', // letrehoz egy evszam id-t
+            fieldlabel: 'evszam' // letrehoz egy evszam labelt
+        }, {
+            fieldid: 'sikeres', // letrehoz egy sikeres id-t
+            fieldlabel: 'sikeres' // letrehoz egy sikeres labelt
+        }]
+        for (const fieldelem of fieldElementLista) {// a tomb elemein vegigmegyunk
+            const field = Div('field');//letrehozza a field elemet
+            form.appendChild(field);//hozzaadja a field elemet a formhoz
+            const label = document.createElement('label');//letrehozza a label elemet
+            label.htmlFor = fieldelem.fieldid;//beallitja a label htmlfor erteket
+            label.textContent = fieldelem.fieldlabel;//beallitja a label szoveget
+            field.appendChild(label);//hozzaadja a label elemet a fieldhez
+            const input = document.createElement('input');//letrehozza az input elemet
+            input.id = fieldelem.fieldid;//beallitja az input idt
+            field.appendChild(input);//hozzaadja az input elemet a fieldhez
+        }
+            const button = document.createElement('button');//letrehozza a button elemet
+            button.textContent = 'hozzaad';//beallitja a button tipusat
+            form.appendChild(button);//hozzaadja a button elemet a formhoz
+}}
