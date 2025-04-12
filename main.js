@@ -65,21 +65,22 @@ for (const fieldelem of fieldElementLista) // a tomb elemein vegigmegyunk
 
     if(fieldelem.fieldid === 'sikeres') // ha a fieldid sikeres
     {
-        const input = document.createElement('select'); // letrehoz egy select elemet
-        input.id = fieldelem.fieldid; // beallitja az input idt
+        const select = document.createElement('select'); // letrehoz egy select elemet
+        select.id = fieldelem.fieldid; // beallitja az input idt
         const option1 = document.createElement('option'); // letrehoz egy option elemet
         option1.value = 'igen'; // beallitja az option erteket
         option1.innerText = 'igen'; // beallitja az option szoveget
         const option2 = document.createElement('option'); // letrehoz egy option elemet
         option2.value = 'nem'; // beallitja az option erteket
         option2.innerText = 'nem'; // beallitja az option szoveget
-        input.appendChild(option1); // hozzaadja az option elemet a selecthez
-        input.appendChild(option2); // hozzaadja az option elemet a selecthez
-        field.appendChild(input); // hozzaadja a select elemet a fieldhez
+        select.appendChild(option1); // hozzaadja az option elemet a selecthez
+        select.appendChild(option2); // hozzaadja az option elemet a selecthez
+        field.appendChild(select); // hozzaadja a select elemet a fieldhez
     }
     else {
-         const input = document.createElement('input'); // letrehoz egy input elemet
-            input.id = fieldelem.fieldid; // beallitja az input idt
+        const input = document.createElement('input'); // letrehoz egy input elemet
+        input.id = fieldelem.fieldid; // beallitja az input id-t
+        field.appendChild(input); // hozzaadja az input elemet a fieldhez
 
     }
 
