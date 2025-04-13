@@ -59,7 +59,7 @@ for (const fieldelem of fieldElementLista) // a tomb elemein vegigmegyunk
     label.htmlFor = fieldelem.fieldid; // beallitja a label htmlfor erteket
     label.textContent = fieldelem.fieldlabel; // beallitja a label szoveget
     field.appendChild(label); // hozzaadja a label elemet a fieldhez
-
+    field.appendChild(document.createElement('br')); // hozzaad egy sort a fieldhez
     const input = document.createElement('input'); // letrehoz egy input elemet
     input.id = fieldelem.fieldid; // beallitja az input idt
 
@@ -83,6 +83,10 @@ for (const fieldelem of fieldElementLista) // a tomb elemein vegigmegyunk
         field.appendChild(input); // hozzaadja az input elemet a fieldhez
 
     }
+    field.appendChild(document.createElement('br')); // hozzaad egy sort a fieldhez
+    const error = document.createElement('span'); // letrehoz egy span elemet
+    error.className = 'error'; // beallitja az error osztalyt
+    field.appendChild(error); // hozzaadja a span elemet a fieldhez
 
 
      
@@ -96,10 +100,25 @@ form1.addEventListener('submit', (e) => {// hozzaad egy eseményfigyelot a formh
     e.preventDefault(); // megakadalyozza az alapertelmezett viselkedest
     const objektumertek = {}; // letrehoz egy ures objektumot
     const inputelemek= e.target.querySelectorAll('input,select'); // letrehoz egy tombot az input elemekhez
+    let valid=true; // letrehoz egy valos valtozot
     for (const inputelem of inputelemek) { // a tomb elemein vegigmegyunk
-        objektumertek[inputelem.id] = inputelem.value; // beallitja az objektum ertekeit az input elemek id-javal
+        const error = inputelem.parentElement.querySelector('.error'); // letrehoz egy error valtozot
+        if(!error){
+            console.error('nincs error'); // ha nem talalhato error span, akkor kiirja a konzolra
+            return; //vissza adja
+        }
+        error.textContent = ''; // beallitja az error szoveget uresre
+        if(inputelem.value === '') // ha az input elem erteke ures
+        {
+            error.textContent = 'Kotelezo'; // beallitja az error szoveget
+            valid=false; // beallitja a valid valtozot hamisra
+        }
+
+       objektumertek[inputelem.id] = inputelem.value; // beallitja az objektum ertekeit az input elemek id-javal
     }
-    array.push(objektumertek); // hozzaadja az objektumot a tombhoz
+    if(valid){ // ha a valid valtozo igaz
+        
+        array.push(objektumertek); // hozzaadja az objektumot a tombhoz
     const tablebodyrow = document.createElement('tr'); // letrehoz egy sort a tablazathoz
     tablebody.appendChild(tablebodyrow); // hozzaadja a sort a tablazathoz
 
@@ -114,6 +133,7 @@ form1.addEventListener('submit', (e) => {// hozzaad egy eseményfigyelot a formh
     const sikerescella = document.createElement('td'); // letrehoz egy cellat a tablazathoz
     sikerescella.textContent=objektumertek.sikeres // beallitja a cella szoveget az objektum ertekeivel
     tablebodyrow.appendChild(sikerescella); // hozzaadja a cellat a sorhoz
+    }
 } )
 
 

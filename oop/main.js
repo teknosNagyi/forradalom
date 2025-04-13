@@ -14,6 +14,6 @@ const fieldLista = [{// letrehoz egy tombot a form elemeihez
 const manager = new Manager();//letrehozza a managert
 const table = new Table('table',manager);//letrehozza a tablet
 const form = new Form('form',fieldLista,manager);//letrehozza a formot
-
+    
 
 

@@ -1,6 +1,6 @@
 class Manager{
     
-    #array 
+    #array  // privat array elem
     
     #forradalomhozzaadascallback // privat forradalomhozzaadascallback elem
 
@@ -9,7 +9,7 @@ class Manager{
       
     }
 
-    setForradalomhozzaadascallback(callback){
+    setForradalomhozzaadascallback(callback){ //letrehozza a setForradalomhozzaadascallback fuggvenyt
         this.#forradalomhozzaadascallback = callback;//beallitja a forradalomhozzaadascallbacket
     }
 

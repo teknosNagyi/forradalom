@@ -1,8 +1,12 @@
 class Forradalom {
-    #forradalom;
-    #evszam;
-    #sikeres;
-
+    #forradalom; // forradalom neve
+    #evszam;    // forradalom evszama
+    #sikeres;   // forradalom sikeressege
+    /**
+     * @param {string} forradalom - forradalom neve
+     * @param {number} evszam - forradalom evszama
+     * @param {boolean} sikeres - forradalom sikeressege
+     */
     get forradalom() {
         return this.#forradalom;
     }
@@ -13,9 +17,13 @@ class Forradalom {
         return this.#sikeres;
     }
 
-
-    constructor(forradalom, evszam, sikeres) {
-        this.#forradalom = forradalom;
+    /**
+     * * @param {string} forradalom - forradalom neve
+     * @param {number} evszam - forradalom evszama
+     * @param {boolean} sikeres - forradalom sikeressege
+     * */
+    constructor(forradalom, evszam, sikeres) { // constructor letrehozasa
+        this.#forradalom = forradalom; 
         this.#evszam = evszam;
         this.#sikeres = sikeres;
     }

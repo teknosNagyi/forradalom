@@ -154,5 +154,5 @@ class Form extends Area {
                 this.manager.addForr(forr);//meghivja a manager forradalomhozzaadas fuggvenyet
              
             })
-}}
+}}  
 console.log(typeof Manager); // should print: "function"
