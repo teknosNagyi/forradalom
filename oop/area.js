@@ -96,6 +96,8 @@ class Table extends Area {
 }
 
 class Form extends Area {
+
+    #formarray;
      /**
      * létrehoz egy űrlapot a megadott osztálynévvel és mezőkkel
      * @param {string} Class - az osztálynév
@@ -103,41 +105,14 @@ class Form extends Area {
      */
     constructor(Class,fieldElementLista,manager) {//constructor letrehozasa Class parameterrel
         super(Class,manager);//meghivja a szulo osztaly konstruktorat
+        this.#formarray = [];//beallitja a formarrayt
         const form = document.createElement('form');//letrehozza a formot
         this.div.appendChild(form);//hozzaadja a formot a divhez
         
         for (const fieldelem of fieldElementLista) {// a tomb elemein vegigmegyunk
-            const field = Div('field');//letrehozza a field elemet
-            form.appendChild(field);//hozzaadja a field elemet a formhoz
-
-            const label = document.createElement('label');//letrehozza a label elemet
-            label.htmlFor = fieldelem.fieldid;//beallitja a label htmlfor erteket
-            label.textContent = fieldelem.fieldlabel;//beallitja a label szoveget
-            field.appendChild(label);//hozzaadja a label elemet a fieldhez
-
-
-            
-
-            if(fieldelem.fieldid === 'sikeres') // ha a fieldid sikeres
-            {
-                const select = document.createElement('select'); // letrehoz egy select elemet
-                select.id = fieldelem.fieldid; // beallitja az input idt
-                const option1 = document.createElement('option'); // letrehoz egy option elemet
-                option1.value = 'igen'; // beallitja az option erteket
-                option1.innerText = 'igen'; // beallitja az option szoveget
-                const option2 = document.createElement('option'); // letrehoz egy option elemet
-                option2.value = 'nem'; // beallitja az option erteket
-                option2.innerText = 'nem'; // beallitja az option szoveget
-                select.appendChild(option1); // hozzaadja az option elemet a selecthez
-                select.appendChild(option2); // hozzaadja az option elemet a selecthez
-                field.appendChild(select); // hozzaadja a select elemet a fieldhez
-            }
-            else {
-                const input = document.createElement('input'); // letrehoz egy input elemet
-                input.id = fieldelem.fieldid; // beallitja az input id-t
-                field.appendChild(input); // hozzaadja az input elemet a fieldhez
-        
-            }
+            const field = new Formfield(fieldelem.fieldid, fieldelem.fieldlabel);//letrehozza a fieldet
+            this.#formarray.push(field);//beallitja a formarrayt
+            form.appendChild(field.Div1());//hozzaadja a fieldet a formhoz
         }
             const button = document.createElement('button');//letrehozza a button elemet
             button.textContent = 'hozzaad';//beallitja a button tipusat
@@ -155,4 +130,74 @@ class Form extends Area {
              
             })
 }}  
-console.log(typeof Manager); // should print: "function"
+class Formfield{ //letrehozza a Formfield osztalyt
+
+    #id; // privat id elem
+    #inputElement;  // privat input elem
+    #labelElement; // privat label elem
+    #errorElement; // privat error elem
+
+    /**
+     * @param {string} id - az input elem id-je
+     * @param {HTMLElement} inputElement - az input elem
+     * @param {HTMLElement} labelElement - a label elem
+     * @param {HTMLElement} errorElement - az error elem
+     */
+
+    get id(){
+        return this.#id;
+    }
+
+    get value(){
+        return this.#inputElement.value;
+    }
+
+    set error(value){
+        this.#errorElement.textContent = value;
+    }
+
+    constructor(id,labelContent){
+        this.#id = id; // beallitja az id-t
+       this.#labelElement = document.createElement('label'); // letrehozza a label elemet
+        this.#labelElement.htmlFor = id; // beallitja a label htmlfor erteket
+        this.#labelElement.textContent = labelContent; // beallitja a label szoveget
+       if (id === 'sikeres') { // ha a fieldid sikeres
+            
+                this.#inputElement = document.createElement('select'); // letrehozza a select elemet
+               
+                const option1 = document.createElement('option'); // letrehozza az option elemet
+                option1.value = 'igen'; // beallitja az option erteket
+                option1.innerText = 'igen'; // beallitja az option szoveget
+                const option2 = document.createElement('option'); // letrehozza az option elemet
+                option2.value = 'nem'; // beallitja az option erteket
+                option2.innerText = 'nem'; // beallitja az option szoveget
+                this.#inputElement.appendChild(option1); // hozzaadja az option elemet a selecthez
+                this.#inputElement.appendChild(option2); // hozzaadja az option elemet a selecthez
+            } 
+            else {
+                this.#inputElement = document.createElement('input'); // letrehozza az input elemet
+                
+            }
+       
+       
+       
+       
+       
+      
+        this.#inputElement.id = id; // beallitja az input id-t
+        this.#errorElement = document.createElement('span'); // letrehozza az error elemet
+        this.#errorElement.className = 'error'; // beallitja az error osztalyt
+
+}
+
+ Div1(){
+    const div = Div('field'); // letrehozza a div elemet
+    const br1 = document.createElement('br'); // letrehozza a br elemet
+    const br2 = document.createElement('br'); // letrehozza a br elemet
+    const htmlElements = [this.#labelElement, br1, this.#inputElement, br2, this.#errorElement]; // letrehozza a tombot
+    for (const element of htmlElements) { // a tomb elemein vegigmegyunk
+        div.appendChild(element); // hozzaadja az elemet a divhez
+    }
+    return div; // visszaadja a divet   
+}
+ }
