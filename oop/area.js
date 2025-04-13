@@ -10,11 +10,19 @@ class Area{ //letrehozza az Area osztalyt
     get div(){//letrehozza a div gettert
         return this.#div;//visszaadja a divet
     }
+    #manager // privat manager elem
+    /**
+     * @returns {Manager} manager
+     * */
+    get manager(){//letrehozza a manager gettert
+        return this.#manager;//visszaadja a managert
+    }
     /**
     * @param {string} className stringet var parameterul
     */
     // constructor letrehozasa className parameterrel
-    constructor(className){
+    constructor(className,manager){ //letrehozza a constructor fuggvenyt
+        this.#manager = manager;//beallitja a managert
         const container1 = this.#getContainer(); //meghivja a #getContainer fuggvenyt
         this.#div = document.createElement('div');//letrehozza a divet
         this.#div.className = className;//beallitja a class nevet
@@ -43,10 +51,29 @@ class Table extends Area {
     /**
      * @param {string} Class stringet var parameterul
      */
-    constructor(Class){//constructor letrehozasa Class parameterrel
-        super(Class); //meghivja a szulo osztaly konstruktorat
+    constructor(Class,manager){//constructor letrehozasa Class parameterrel
+        super(Class,manager); //meghivja a szulo osztaly konstruktorat
         const tbody = this.#tabalazatgen();//letrehozza a tablazatot    
+        this.manager.setForradalomhozzaadascallback((forr)=>{
+            const tablebodyRow = document.createElement('tr');//letrehozza a sort
+            const forradalomcell = document.createElement('td');//letrehozza a cellat
+            forradalomcell.textContent = forr.forradalom; //beallitja a cella tartalmat
+            tablebodyRow.appendChild(forradalomcell);//hozzaadja a cellat a sorhoz
+
+            const evszamcell = document.createElement('td');//letrehozza a cellat
+            evszamcell.textContent = forr.evszam; //beallitja a cella tartalmat
+            tablebodyRow.appendChild(evszamcell);//hozzaadja a cellat a sorhoz
+
+            const sikerescell = document.createElement('td');//letrehozza a cellat
+            sikerescell.textContent = forr.sikeres; //beallitja a cella tartalmat
+            tablebodyRow.appendChild(sikerescell);//hozzaadja a cellat a sorhoz
+            tbody.appendChild(tablebodyRow);//hozzaadja a sort a tablazathoz
+        })
+
     }
+
+
+
 
     #tabalazatgen(){//letrehozza a tablazatot
         const table = document.createElement('table');//letrehozza a tablet
@@ -74,8 +101,8 @@ class Form extends Area {
      * @param {string} Class - az osztálynév
      * @param {Array} fieldElementLista - a mezők listája
      */
-    constructor(Class,fieldElementLista ) {//constructor letrehozasa Class parameterrel
-        super(Class);//meghivja a szulo osztaly konstruktorat
+    constructor(Class,fieldElementLista,manager) {//constructor letrehozasa Class parameterrel
+        super(Class,manager);//meghivja a szulo osztaly konstruktorat
         const form = document.createElement('form');//letrehozza a formot
         this.div.appendChild(form);//hozzaadja a formot a divhez
         
@@ -115,4 +142,17 @@ class Form extends Area {
             const button = document.createElement('button');//letrehozza a button elemet
             button.textContent = 'hozzaad';//beallitja a button tipusat
             form.appendChild(button);//hozzaadja a button elemet a formhoz
+
+            form.addEventListener('submit', (e) => {//hozzaad egy event listenert a formhoz
+                e.preventDefault();//megelozi az alapertelmezett viselkedest
+                const valueObject = {};//letrehozza az valueObjectet
+                const fieldlista = e.target.querySelectorAll('input,select');//letrehozza a fieldlistat
+                for (const field of fieldlista) {//a fieldlistan vegigmegyunk
+                    valueObject[field.id] = field.value;//beallitja az valueObjectet
+                }
+                const forr = new Forradalom(valueObject.forradalom, Number(valueObject.evszam),valueObject.sikeres);//letrehozza az forradalmat
+                this.manager.addForr(forr);//meghivja a manager forradalomhozzaadas fuggvenyet
+             
+            })
 }}
+console.log(typeof Manager); // should print: "function"

@@ -11,6 +11,9 @@ const fieldLista = [{// letrehoz egy tombot a form elemeihez
     fieldid: 'sikeres', // letrehoz egy sikeres id-t
     fieldlabel: 'sikeres' // letrehoz egy sikeres labelt
 }]
+const manager = new Manager();//letrehozza a managert
+const table = new Table('table',manager);//letrehozza a tablet
+const form = new Form('form',fieldLista,manager);//letrehozza a formot
 
-const table = new Table('table');//letrehozza a tablet
-const form = new Form('form',fieldLista);//letrehozza a formot
+
+

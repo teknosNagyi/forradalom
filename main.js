@@ -95,7 +95,7 @@ form1.appendChild(button); // hozzaadja a button elemet a formhoz
 form1.addEventListener('submit', (e) => {// hozzaad egy eseményfigyelot a formhoz
     e.preventDefault(); // megakadalyozza az alapertelmezett viselkedest
     const objektumertek = {}; // letrehoz egy ures objektumot
-    const inputelemek= e.target.querySelectorAll('input'); // letrehoz egy tombot az input elemekhez
+    const inputelemek= e.target.querySelectorAll('input,select'); // letrehoz egy tombot az input elemekhez
     for (const inputelem of inputelemek) { // a tomb elemein vegigmegyunk
         objektumertek[inputelem.id] = inputelem.value; // beallitja az objektum ertekeit az input elemek id-javal
     }
