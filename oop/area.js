@@ -121,13 +121,23 @@ class Form extends Area {
             form.addEventListener('submit', (e) => {//hozzaad egy event listenert a formhoz
                 e.preventDefault();//megelozi az alapertelmezett viselkedest
                 const valueObject = {};//letrehozza az valueObjectet
-                const fieldlista = e.target.querySelectorAll('input,select');//letrehozza a fieldlistat
-                for (const field of fieldlista) {//a fieldlistan vegigmegyunk
-                    valueObject[field.id] = field.value;//beallitja az valueObjectet
+                //const fieldlista = e.target.querySelectorAll('input,select');//letrehozza a fieldlistat
+              //  for (const field of fieldlista) {//a fieldlistan vegigmegyunk
+            //        valueObject[field.id] = field.value;//beallitja az valueObjectet}
+            let valid = true;//beallitja a valid valtozot
+            for (const field of this.#formarray) {//a formarrayon vegigmegyunk
+                field.error = '';//beallitja az error erteket
+                if(field.value === ''){//ha a field valueja ures
+                    field.error = 'kitoltes kotelezo';//beallitja az error erteket
+                    valid = false;//beallitja a valid valtozot
                 }
+                valueObject[field.id] = field.value;//beallitja az valueObjectet
+                
+            }
+            if(valid){//ha a valid true
                 const forr = new Forradalom(valueObject.forradalom, Number(valueObject.evszam),valueObject.sikeres);//letrehozza az forradalmat
                 this.manager.addForr(forr);//meghivja a manager forradalomhozzaadas fuggvenyet
-             
+            }
             })
 }}  
 class Formfield{ //letrehozza a Formfield osztalyt
