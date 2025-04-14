@@ -8,6 +8,16 @@ const Div = (className) => {
     // Visszaadja a letrehozott div elemet
     return div;
 };
+const filter = (array, callback) => { // letrehoz egy filter fuggvenyt
+    const szurtArray = []; // letrehoz egy ures tombot
+    for (const element of array) { // vegigmegy a tomb elemein
+        if (callback(element)) { // ha a callback igaz
+            szurtArray.push(element); // hozzaadja az elemet a tombhoz
+        }
+    }
+    return szurtArray; // visszaadja a tombot
+}
+
 
 // Letrehoz egy div elemet container nevvel
 const containerDiv = Div("container");
@@ -197,4 +207,92 @@ letoltesgomb.addEventListener('click', () => { // hozzaad egy eseményfigyelot a
     link.download = 'forradalom.csv'; // beallitja a link letoltesi nevet
     link.click(); // meghivja a linket
     URL.revokeObjectURL(link.href); // visszavonja a linket
+})
+
+const szuroformdiv = Div('szuroform'); // letrehoz egy div elemet a szuroformhoz
+containerDiv.appendChild(szuroformdiv); // hozzaadja a szuroform div elemet a container divhez
+
+const formszuro = document.createElement('form'); // letrehoz egy form elemet
+szuroformdiv.appendChild(formszuro); // hozzaadja a form elemet a szuroform divhez
+const select = document.createElement('select'); // letrehoz egy select elemet
+formszuro.appendChild(select); // hozzaadja a select elemet a formhoz
+
+const options = [{// letrehoz egy tombot az option elemekhez
+    value: '',
+    innerText: '' // beallitja az option szoveget
+},
+{
+    value: 'forradalom', // beallitja az option erteket
+    innerText: 'forradalom' // beallitja az option szoveget
+}, 
+{
+    value: 'evszam', // beallitja az option erteket
+    innerText: 'evszam' // beallitja az option szoveget
+}, 
+{
+    value: 'sikeres', // beallitja az option erteket
+    innerText: 'sikeres' // beallitja az option szoveget    
+} ]
+
+for (const option of options) // a tomb elemein vegigmegyunk
+{
+    const option3 = document.createElement('option'); // letrehoz egy option elemet
+    option3.value = option.value; // beallitja az option erteket
+    option3.innerText = option.innerText; // beallitja az option szoveget
+    select.appendChild(option3); // hozzaadja az option elemet a selecthez
+}
+
+const input = document.createElement('input'); // letrehoz egy input elemet
+input.id = 'szuroinput'; // beallitja az input id-t
+formszuro.appendChild(input); // hozzaadja az input elemet a szuroform divhez
+
+const szurogomb = document.createElement('button'); // letrehoz egy button elemet
+szurogomb.textContent = 'szuro'; // beallitja a button szoveget
+formszuro.appendChild(szurogomb); // hozzaadja a button elemet a formhoz
+
+formszuro.addEventListener('submit', (e) => { // hozzaad egy eseményfigyelot a formhoz
+    e.preventDefault(); // megakadalyozza az alapertelmezett viselkedest
+    const filterbemenet = e.target.querySelector('#szuroinput'); // letrehoz egy filterbemenet valtozot
+    const select = e.target.querySelector('select'); // letrehoz egy select valtozot
+
+    const szurttomb = filter(array, (forradalom) => { // letrehoz egy szurttomb valtozot
+        if(select.value == "forradalom"){ // ha a select erteke forradalom
+            if(filterbemenet.value == forradalom.forradalom){ // ha a filterbemenet erteke megegyezik a forradalom ertekevel
+                return true; // igazat ad vissza
+            }
+        }
+        else if (select.value == "evszam"){ // ha a select erteke evszam 
+            if(filterbemenet.value == forradalom.evszam){ // ha a filterbemenet erteke megegyezik a forradalom ertekevel
+                return true; // igazat ad vissza
+            }
+           
+        }else if (select.value == "sikeres"){ // ha a select erteke sikeres
+            if(filterbemenet.value == forradalom.sikeres){ // ha a filterbemenet erteke megegyezik a forradalom ertekevel
+                return true; // igazat ad vissza
+            }
+        }else {
+            return true; // ha a filterbemenet erteke ures
+        }
+})
+tablebody.innerHTML = ''; // beallitja a tablazatot uresre
+for(const szurtelem of szurttomb){ // a szurttomb elemein vegigmegyunk
+    const tablebodyrow = document.createElement('tr'); // letrehoz egy sort a tablazathoz
+    tablebody.appendChild(tablebodyrow); // hozzaadja a sort a tablazathoz
+
+    const forradalomcella = document.createElement('td'); // letrehoz egy cellat a tablazathoz
+    forradalomcella.textContent=szurtelem.forradalom // beallitja a cella szoveget az objektum ertekeivel
+    tablebodyrow.appendChild(forradalomcella); // hozzaadja a cellat a sorhoz
+
+    const evszamcella = document.createElement('td'); // letrehoz egy cellat a tablazathoz
+    evszamcella.textContent=szurtelem.evszam // beallitja a cella szoveget az objektum ertekeivel
+    tablebodyrow.appendChild(evszamcella); // hozzaadja a cellat a sorhoz
+
+    const sikerescella = document.createElement('td'); // letrehoz egy cellat a tablazathoz
+    sikerescella.textContent=szurtelem.sikeres // beallitja a cella szoveget az objektum ertekeivel
+    tablebodyrow.appendChild(sikerescella); // hozzaadja a cellat a sorhoz
+
+}
+
+
+
 })
