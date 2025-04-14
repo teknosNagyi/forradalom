@@ -50,6 +50,7 @@ class Area{ //letrehozza az Area osztalyt
 class Table extends Area {
     /**
      * @param {string} Class stringet var parameterul
+     * @param {Manager} manager - a manager objektum
      */
     constructor(Class,manager){//constructor letrehozasa Class parameterrel
         super(Class,manager); //meghivja a szulo osztaly konstruktorat
@@ -102,6 +103,7 @@ class Form extends Area {
      * létrehoz egy űrlapot a megadott osztálynévvel és mezőkkel
      * @param {string} Class - az osztálynév
      * @param {Array} fieldElementLista - a mezők listája
+     * @param {Manager} manager - a manager objektum
      */
     constructor(Class,fieldElementLista,manager) {//constructor letrehozasa Class parameterrel
         super(Class,manager);//meghivja a szulo osztaly konstruktorat
@@ -137,7 +139,7 @@ class Form extends Area {
             }
             })
 }}  
-class Upload extends Area{ //letrehozza az Upload osztalyt
+class UploadDownload extends Area{ //letrehozza az Upload osztalyt
     /**
      * 
      * @param {string} Class - az osztálynév
@@ -168,10 +170,22 @@ class Upload extends Area{ //letrehozza az Upload osztalyt
                 reader.readAsText(file); //beolvassa a file tartalmat
 
             })
-        }
+        const letoltesbutton = document.createElement('button'); //letrehozza a button elemet
+        letoltesbutton.textContent = 'letoltes'; //beallitja a button tipusat
+        this.div.appendChild(letoltesbutton); //hozzaadja a button elemet a divhez
+        letoltesbutton.addEventListener('click', (e) => { //hozzaad egy event listenert a buttonhoz
+            const link = document.createElement('a'); //letrehozza a link elemet
+            const tartalom = this.manager.szovegexportgeneralas()//tartalom letrehozasa
+            const file = new Blob([tartalom]); //letrehozza a file elemet
+            link.href = URL.createObjectURL(file); //beallitja a link href erteket
+            link.download = 'forradalom.csv'; //beallitja a link download erteket
+            link.click(); //meghivja a link click fuggvenyet
+            URL.revokeObjectURL(link.href); //meghivja a URL revokeObjectURL fuggvenyet
+
+        })
     }
 
-
+}
 
 
 
