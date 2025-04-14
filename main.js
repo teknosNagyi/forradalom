@@ -141,3 +141,42 @@ form1.addEventListener('submit', (e) => {// hozzaad egy eseményfigyelot a formh
 containerDiv.appendChild(tableDiv);
 // Hozzaadja a form div elemet a container divhez
 containerDiv.appendChild(formDiv);
+
+const filebemenet = document.createElement('input'); // letrehoz egy file input elemet
+containerDiv.appendChild(filebemenet); // hozzaadja a file input elemet a container divhez
+filebemenet.type = 'file'; // beallitja a file input tipusat
+filebemenet.id = 'filebemenet'; // beallitja a file input id-t
+filebemenet.addEventListener('change', (e) => { // hozzaad egy eseményfigyelot a file inputhoz
+    const file = e.target.files[0]; // letrehoz egy file valtozot
+    const reader = new FileReader(); // letrehoz egy FileReader objektumot
+    reader.onload = () => { // hozzaad egy onload eseményfigyelot a FileReader objektumhoz
+        const filesorok = reader.result.split('\n'); // letrehoz egy tombot a file soraihoz
+        const fejlec = filesorok.slice(1); // letrehoz egy tombot a fejlec sorahoz
+        for (const sorok of fejlec) { // a tomb elemein vegigmegyunk
+            const levagottsor= sorok.trim(); // levagja a sor elejet es veget
+            const mezok = levagottsor.split(';'); // letrehoz egy tombot a sorok mezoihez
+            const forradalmak={ // letrehoz egy forradalmak objektumot
+                forradalom: mezok[0], // beallitja a forradalom erteket
+                evszam: mezok[1], // beallitja az evszam erteket
+                sikeres: mezok[2] // beallitja a sikeres erteket
+            }
+            array.push(forradalmak); // hozzaadja a forradalmak objektumot a tombhoz
+            const tbodyrow = document.createElement('tr'); // letrehoz egy sort a tablazathoz
+            tablebody.appendChild(tbodyrow); // hozzaadja a sort a tablazathoz
+
+            const forradalomcella = document.createElement('td'); // letrehoz egy cellat a tablazathoz
+            forradalomcella.textContent=forradalmak.forradalom // beallitja a cella szoveget az objektum ertekeivel
+            tbodyrow.appendChild(forradalomcella); // hozzaadja a cellat a sorhoz
+
+            const evszamcella = document.createElement('td'); // letrehoz egy cellat a tablazathoz
+            evszamcella.textContent=forradalmak.evszam // beallitja a cella szoveget az objektum ertekeivel
+            tbodyrow.appendChild(evszamcella); // hozzaadja a cellat a sorhoz
+
+            const sikerescella = document.createElement('td'); // letrehoz egy cellat a tablazathoz
+            sikerescella.textContent=forradalmak.sikeres // beallitja a cella szoveget az objektum ertekeivel
+            tbodyrow.appendChild(sikerescella); // hozzaadja a cellat a sorhoz
+        }
+    }
+    reader.readAsText(file); // beolvassa a file tartalmat
+    
+})
