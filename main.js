@@ -180,3 +180,21 @@ filebemenet.addEventListener('change', (e) => { // hozzaad egy eseményfigyelot 
     reader.readAsText(file); // beolvassa a file tartalmat
     
 })
+
+const letoltesgomb= document.createElement('button'); // letrehoz egy button elemet
+letoltesgomb.textContent='letoltes'; // beallitja a button szoveget
+containerDiv.appendChild(letoltesgomb); // hozzaadja a button elemet a container divhez
+letoltesgomb.addEventListener('click', () => { // hozzaad egy eseményfigyelot a buttonhoz
+    const link = document.createElement('a'); // letrehoz egy link elemet
+    const tartalomarray=["forradalom;evszam;sikeres"]; // letrehoz egy ures tombot a tartalomhoz
+    for(const forradalom of array) // a tomb elemein vegigmegyunk
+    {
+        tartalomarray.push(`${forradalom.forradalom};${forradalom.evszam};${forradalom.sikeres}`); // hozzaadja a forradalom ertekeit a tombhoz
+    }
+    const tartalom = tartalomarray.join('\n'); // beallitja a tartalom tomb ertekeit
+    const file = new Blob([tartalom]); // letrehoz egy file objektumot
+    link.href = URL.createObjectURL(file); // beallitja a link href erteket
+    link.download = 'forradalom.csv'; // beallitja a link letoltesi nevet
+    link.click(); // meghivja a linket
+    URL.revokeObjectURL(link.href); // visszavonja a linket
+})
