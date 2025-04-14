@@ -120,10 +120,7 @@ class Form extends Area {
 
             form.addEventListener('submit', (e) => {//hozzaad egy event listenert a formhoz
                 e.preventDefault();//megelozi az alapertelmezett viselkedest
-                const valueObject = {};//letrehozza az valueObjectet
-                //const fieldlista = e.target.querySelectorAll('input,select');//letrehozza a fieldlistat
-              //  for (const field of fieldlista) {//a fieldlistan vegigmegyunk
-            //        valueObject[field.id] = field.value;//beallitja az valueObjectet}
+                const valueObject = {};//letrehozza az valueObjectet        
             let valid = true;//beallitja a valid valtozot
             for (const field of this.#formarray) {//a formarrayon vegigmegyunk
                 field.error = '';//beallitja az error erteket
@@ -140,6 +137,44 @@ class Form extends Area {
             }
             })
 }}  
+class Upload extends Area{ //letrehozza az Upload osztalyt
+    /**
+     * 
+     * @param {string} Class - az osztálynév
+     * @param {Manager} manager - a manager objektum
+     */
+    constructor(Class,manager){ //letrehozza a constructor fuggvenyt
+        super(Class,manager); //meghivja a szulo osztaly konstruktorat
+        const input = document.createElement('input'); //letrehozza az input elemet
+        input.type = 'file'; //beallitja az input tipusat
+        input.id= 'file'; //beallitja az input id-t
+        this.div.appendChild(input); //hozzaadja az input elemet a divhez
+        input.addEventListener('change', (e) => { //hozzaad egy event listenert az inputhoz
+                
+                const file = e.target.files[0]; //letrehozza a file valtozot
+                const reader = new FileReader(); //letrehozza a FileReader elemet
+                reader.onload = () => { //ha betoltodott a file
+                    const filesorok = reader.result.split("\n"); //letrehozza a text valtozot
+                    const levagottheader = filesorok.slice(1); //levagja az elso sort
+
+                    for (const sor of levagottheader) { //a lines tomb elemein vegigmegyunk
+                        const levagottsor1 = sor.trim(); //levagja a sor elejet es veget
+                        const mezo = levagottsor1.split(';'); //letrehozza a mezo tombot
+
+                        const forr = new Forradalom(mezo[0], Number(mezo[1]), mezo[2]); //letrehozza a forradalmat
+                        this.manager.addForr(forr); //meghivja a manager forradalomhozzaadas fuggvenyet
+                    }
+                }
+                reader.readAsText(file); //beolvassa a file tartalmat
+
+            })
+        }
+    }
+
+
+
+
+
 class Formfield{ //letrehozza a Formfield osztalyt
 
     #id; // privat id elem
