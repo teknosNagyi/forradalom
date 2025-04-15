@@ -2,7 +2,7 @@ class Manager{
     
     #array  // privat array elem
     
-    #forradalomhozzaadascallback // privat forradalomhozzaadascallback elem
+    #forradalomhozzaadascallback; // privat forradalomhozzaadascallback elem
 
     #tablarendercallback // privat tablarendercallback elem
 

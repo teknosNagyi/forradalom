@@ -43,6 +43,15 @@ class Area{ //letrehozza az Area osztalyt
         return container;//visszaadja a containert
   
     };
+    /**
+ * @param {string} label a gomb szovege
+ * @returns {HTMLButtonElement} visszaadja a letrehozott gombot
+ */
+    gombletrehozasa(label){
+        const gomb = document.createElement('button');//letrehozza a button elemet
+        gomb.textContent = label;//beallitja a button tipusat
+        return gomb;//visszaadja a gombot
+    }
 }
 /**
  *  az Area osztalybol leszarmazott osztalya es egy tablazatot hoz letre 
@@ -54,31 +63,58 @@ class Table extends Area {
      */
     constructor(Class,manager){//constructor letrehozasa Class parameterrel
         super(Class,manager); //meghivja a szulo osztaly konstruktorat
-        const tbody = this.#tabalazatgen();//letrehozza a tablazatot    
-        this.manager.setForradalomhozzaadascallback((forr)=>{
-            this.#forrsorra(forr,tbody)
-        })
-
-        this.manager.setTablarendercallback((forradalomok)=>{
-            this.div.querySelector('tbody').innerHTML = '';
-            for (const forradalom of forradalomok) {//a forradalom tomb elemein vegigmegyunk
-                this.#forrsorra(forradalom,tbody);//letrehozza a tablazatot
+        const tbody = this.#tabalazatgen();//letrehozza a tablazatot 
+        
+        this.manager.setForradalomhozzaadascallback(this.#forrsorracallback(tbody));//beallitja a tablarendercallbacket
+        this.manager.setTablarendercallback(this.#Tablarendercallback(tbody));//beallitja a tablarendercallbacket
+        }
+        /**
+ * @param {HTMLElement} tbody a tablazat torzse
+ * @returns {Function} visszaadja a tablarendercallback fuggvenyt
+ */
+        #Tablarendercallback(tbody){//letrehozza a tablarendercallback fuggvenyt
+                
+                return (forradalomok) => {//visszater a forradalomokkal
+                    this.div.querySelector('tbody').innerHTML = '';//torli a tablazatot
+                    for (const forradalom of forradalomok) {//a forradalom tomb elemein vegigmegyunk
+                        this.#forrsorra(forradalom,tbody);//letrehozza a tablazatot
+                    }
+                }
             }
-
-    });
-
-    }
+            /**
+ * @param {HTMLElement} tbody a tablazat torzse
+ * @returns {Function} visszaadja a forrsorracallback fuggvenyt
+ */
+        #forrsorracallback(tbody){//letrehozza a forrsorracallback fuggvenyt
+                
+                    return (forradalom) => {//visszater a forradalommal
+                        this.#forrsorra(forradalom,tbody);//letrehozza a tablazatot
+                    }
+                }
+/**
+ * @param {HTMLElement} sor a tablazat sora
+ * @param {string} tartalom a cella tartalma
+ * @param {string} [type='td'] a cella tipusa
+ */
+    
     #forrsorra(forradalom,tbody){//letrehozza a forradalom sort
         
         const sor = document.createElement('tr');//letrehozza a sort
-        tbody.appendChild(sor);//hozzaadja a sort a tablazat testhez
-        const forradalomtomb = [forradalom.forradalom, forradalom.evszam, forradalom.sikeres];//letrehozza a forradalom tombot
-        for (const celltartalom of forradalomtomb) {//a tomb elemein vegigmegyunk
-            const cella = document.createElement('td');//letrehozza a cellat
-            cella.innerText = celltartalom;//beallitja a cella tartalmat
-            sor.appendChild(cella);//hozzaadja a cellat a sorhoz
-        }
+       
+        this.#createCella(sor,forradalom.forradalom);//letrehozza a cellat
+        this.#createCella(sor,forradalom.evszam);//letrehozza a cellat
+        this.#createCella(sor,forradalom.sikeres);//letrehozza a cellat
+         tbody.appendChild(sor);//hozzaadja a sort a tablazat testhez
     }
+    /**
+ * @returns {HTMLElement} visszaadja a tablazat torzset (tbody)
+ */
+    #createCella(sor,tartalom,type='td'){//letrehozza a cellat
+        const cella = document.createElement(type);//letrehozza a cellat
+        cella.innerText = tartalom;//beallitja a cella tartalmat
+        sor.appendChild(cella);//hozzaadja a cellat a sorhoz
+    }
+
 
 
     #tabalazatgen(){//letrehozza a tablazatot
@@ -90,9 +126,7 @@ class Table extends Area {
         tableheader.appendChild(tableheaderow);//hozzaadja a sort a thead elemhez
         const theadercella = ['forradalom', 'evszam', 'sikeres'];// letrehoz egy tombot a fejlec cellainak tartalmaibol
         for (const celltartalom of theadercella) {// a tomb elemein vegigmegyunk
-            const cella = document.createElement('th');// letrehoz egy th cellat
-            cella.innerText = celltartalom;// a cella tartalma a tomb elemei lesznek
-            tableheaderow.appendChild(cella);// hozzaadja a cellat a sorhoz
+           this.#createCella(tableheaderow, celltartalom, 'th');//letrehozza a cellat
         }
         const tablebody = document.createElement('tbody');// letrehoz egy tbody elemet
         table.appendChild(tablebody);// hozzaadja a tbody elemet a tablazathoz
@@ -113,37 +147,79 @@ class Form extends Area {
     constructor(Class,fieldElementLista,manager) {//constructor letrehozasa Class parameterrel
         super(Class,manager);//meghivja a szulo osztaly konstruktorat
         this.#formarray = [];//beallitja a formarrayt
+        const form = this.#createForm(fieldElementLista); //letrehozza a formot
+        form.addEventListener('submit', this.#formsubmit())// hozzaadja az event listenert a formhoz
+    }
+    /**
+ * @returns {HTMLElement} visszaadja a tablazat torzset (tbody)
+ */
+    #createForm(fieldElementLista) {//letrehozza a formot
         const form = document.createElement('form');//letrehozza a formot
         this.div.appendChild(form);//hozzaadja a formot a divhez
         
         for (const fieldelem of fieldElementLista) {// a tomb elemein vegigmegyunk
             const field = new Formfield(fieldelem.fieldid, fieldelem.fieldlabel);//letrehozza a fieldet
+        
             this.#formarray.push(field);//beallitja a formarrayt
             form.appendChild(field.Div1());//hozzaadja a fieldet a formhoz
         }
-            const button = document.createElement('button');//letrehozza a button elemet
-            button.textContent = 'hozzaad';//beallitja a button tipusat
+            const button = this.gombletrehozasa('hozzaadas');//letrehozza a gombot
             form.appendChild(button);//hozzaadja a button elemet a formhoz
+            return form;//visszaadja a formot
+    }
+    #gombletrehozas(label) {//letrehozza a gombot
+        const gomb = document.createElement('button');// letrehozza a gombot
+        gomb.type = 'submit';// beallitja a gomb tipusat
+        gomb.textContent = label;// beallitja a gomb szoveget
+        return gomb;// visszaadja a gombot
+    }
 
-            form.addEventListener('submit', (e) => {//hozzaad egy event listenert a formhoz
+/**
+ * @returns {Function} visszaadja a form submit esemenyfigyelojet
+ */
+
+    #formsubmit(){//letrehozza a formsubmit fuggvenyt
+           return (e) => {//hozzaad egy event listenert a formhoz
                 e.preventDefault();//megelozi az alapertelmezett viselkedest
-                const valueObject = {};//letrehozza az valueObjectet        
-            let valid = true;//beallitja a valid valtozot
-            for (const field of this.#formarray) {//a formarrayon vegigmegyunk
-                field.error = '';//beallitja az error erteket
-                if(field.value === ''){//ha a field valueja ures
-                    field.error = 'kitoltes kotelezo';//beallitja az error erteket
-                    valid = false;//beallitja a valid valtozot
-                }
-                valueObject[field.id] = field.value;//beallitja az valueObjectet
+               if(this.#validate()){ //ha a validacio sikeres
+                const forrObj= this.#createforrObj();//letrehozza a forrObj objektumot
                 
+                const forradalom = new Forradalom(forrObj.forradalom, forrObj.evszam, forrObj.sikeres);//letrehozza a forradalmat
+               this.manager.addForr(forradalom);//meghivja a manager forradalomhozzaadas fuggvenyet
             }
-            if(valid){//ha a valid true
-                const forr = new Forradalom(valueObject.forradalom, Number(valueObject.evszam),valueObject.sikeres);//letrehozza az forradalmat
-                this.manager.addForr(forr);//meghivja a manager forradalomhozzaadas fuggvenyet
+}
+}
+/**
+ * @returns {boolean} visszaadja, hogy van-e hiba az urlapon
+ */
+#validate(){//letrehozza a validate fuggvenyt
+    let error = true;//beallitja az error valtozot
+    for (const field of this.#formarray) {//a formarray elemein vegigmegyunk
+        field.error = '';//beallitja az error erteket
+        if(field.value === ''){//ha a value ures
+            field.error = 'kitoltendo';//beallitja az error erteket
+            error = false;//beallitja az error valtozot
+        }
+    }
+    return error;//visszaadja az error valtozot
+
+} 
+/**
+ * @returns {Object} visszaadja az urlap mezok ertekeit tartalmazo objektumot
+ */
+#createforrObj(){//letrehozza a forrObj fuggvenyt
+    
+        const forrObj = {};//letrehozza a forrObj objektumot
+        for (const field of this.#formarray) {//a formarray elemein vegigmegyunk
+           if(field.id === 'sikeres'){//ha a field idje sikeres
+                forrObj[field.id] = field.value;//beallitja az erteket
+            }else{//ha nem
+                forrObj[field.id] = field.value;//beallitja az erteket
             }
-            })
-}}  
+        }
+        return forrObj;//visszaadja a forrObj objektumot
+    }
+}
 class UploadDownload extends Area{ //letrehozza az Upload osztalyt
     /**
      * 
@@ -155,44 +231,59 @@ class UploadDownload extends Area{ //letrehozza az Upload osztalyt
         const input = document.createElement('input'); //letrehozza az input elemet
         input.type = 'file'; //beallitja az input tipusat
         input.id= 'file'; //beallitja az input id-t
-        this.div.appendChild(input); //hozzaadja az input elemet a divhez
-        input.addEventListener('change', (e) => { //hozzaad egy event listenert az inputhoz
-                
-                const file = e.target.files[0]; //letrehozza a file valtozot
-                const reader = new FileReader(); //letrehozza a FileReader elemet
-                reader.onload = () => { //ha betoltodott a file
-                    const filesorok = reader.result.split("\n"); //letrehozza a text valtozot
-                    const levagottheader = filesorok.slice(1); //levagja az elso sort
-
-                    for (const sor of levagottheader) { //a lines tomb elemein vegigmegyunk
-                        const levagottsor1 = sor.trim(); //levagja a sor elejet es veget
-                        const mezo = levagottsor1.split(';'); //letrehozza a mezo tombot
-
-                        const forr = new Forradalom(mezo[0], Number(mezo[1]), mezo[2]); //letrehozza a forradalmat
-                        this.manager.addForr(forr); //meghivja a manager forradalomhozzaadas fuggvenyet
-                    }
-                }
-                reader.readAsText(file); //beolvassa a file tartalmat
-
-            })
-        const letoltesbutton = document.createElement('button'); //letrehozza a button elemet
-        letoltesbutton.textContent = 'letoltes'; //beallitja a button tipusat
+        this.div.appendChild(input); //hozzaadja az input elemet a divhez       
+        input.addEventListener('change',this.#inputchange()) //hozzaadja az event listenert az inputhoz
+        
+        const letoltesbutton = document.createElement('button'); //letrehozza a button elemet       
         this.div.appendChild(letoltesbutton); //hozzaadja a button elemet a divhez
-        letoltesbutton.addEventListener('click', (e) => { //hozzaad egy event listenert a buttonhoz
-            const link = document.createElement('a'); //letrehozza a link elemet
-            const tartalom = this.manager.szovegexportgeneralas()//tartalom letrehozasa
-            const file = new Blob([tartalom]); //letrehozza a file elemet
-            link.href = URL.createObjectURL(file); //beallitja a link href erteket
-            link.download = 'forradalom.csv'; //beallitja a link download erteket
-            link.click(); //meghivja a link click fuggvenyet
-            URL.revokeObjectURL(link.href); //meghivja a URL revokeObjectURL fuggvenyet
+        letoltesbutton.addEventListener('click',this.#letoltes()) //hozzaadja az event listenert a buttonhoz
+        letoltesbutton.textContent= 'letoltes'; //beallitja a button szoveget
 
-        })
+       
     }
+      /**
+      * 
+      * @returns {EventListener} a gomb esedmenykezeloje
+      */
+    #letoltes(){ //letrehozza a letoltes fuggvenyt
+        return () => { //hozzaad egy event listenert a buttonhoz
+            const link = document.createElement('a'); //letrehozza a link elemet
+            const content = this.manager.szovegexportgeneralas(); //letrehozza a constent valtozot
+            const file = new Blob([content])
+            link.href = URL.createObjectURL(file); //beallitja a link href erteket
+            link.download = 'forradalom.csv'; //beallitja a link letoltesi nevet
+            link.click(); //meghivja a linket
+            URL.revokeObjectURL(link.href); //meghivja a linket
 
 }
 
-
+    }
+     /**
+      * 
+      * @returns {EventListener} inputchange
+      */
+    #inputchange(){ //letrehozza az inputchange fuggvenyt
+        return (e) => { //hozzaad egy event listenert az inputhoz
+            const selectfile = e.target.files[0]; //letrehozza a selectfile valtozot
+            if(!selectfile){
+                console.error('nincs file'); //ha nincs file
+                return; //visszater
+            }
+            const reader = new FileReader(); //letrehozza a reader elemet
+            reader.onload = () => { //letrehozza a reader onload fuggvenyt
+                const sorok = reader.result.split('\n'); //letrehozza a sorokat
+                const forrsorok = sorok.slice(1); //letrehozza a forrsorokat
+                for (const forrsor of forrsorok) { //a forrsorok elemein vegigmegyunk
+                    const filterrow = forrsor.trim(); //letrehozza a filterrow valtozot
+                    const forradalom = filterrow.split(';'); //letrehozza a forradalmat
+                    const forradalomObj = new Forradalom(forradalom[0], Number(forradalom[1]), forradalom[2]); //letrehozza a forradalom objektumot
+                    this.manager.addForr(forradalomObj); //meghivja a manager addforr fuggvenyet
+                }
+        }
+        reader.readAsText(selectfile); //meghivja a reader readAsText fuggvenyet
+    }
+}
+}
 
 class Formfield{ //letrehozza a Formfield osztalyt
 

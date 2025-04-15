@@ -32,8 +32,7 @@ class FilterForm extends Area{
         input.id = 'szuroinput'; //beallitja az input idjat
         form.appendChild(input); //hozzadja az input elemet a formhoz
 
-        const button = document.createElement('button'); //letrehozza a button elemet
-        button.innerText = 'Szuro'; //beallitja a button textContentjat
+        const button = this.gombletrehozasa("szuro") //letrehozza a gombot
         form.appendChild(button); //hozzadja a button elemet a formhoz
 
         form.addEventListener('submit', (e) => { //letrehozza az eventet
