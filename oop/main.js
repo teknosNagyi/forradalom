@@ -15,6 +15,7 @@ const manager = new Manager();//letrehozza a managert
 const table = new Table('table',manager);//letrehozza a tablet
 const form = new Form('form',fieldLista,manager);//letrehozza a formot
 const fajlfeltoltes = new UploadDownload('upload',manager);//letrehozza a fajlfeltoltest
+const filteroop= new FilterForm('filter',manager);//letrehozza a filtert
     
 
 

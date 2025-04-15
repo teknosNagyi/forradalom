@@ -56,24 +56,29 @@ class Table extends Area {
         super(Class,manager); //meghivja a szulo osztaly konstruktorat
         const tbody = this.#tabalazatgen();//letrehozza a tablazatot    
         this.manager.setForradalomhozzaadascallback((forr)=>{
-            const tablebodyRow = document.createElement('tr');//letrehozza a sort
-            const forradalomcell = document.createElement('td');//letrehozza a cellat
-            forradalomcell.textContent = forr.forradalom; //beallitja a cella tartalmat
-            tablebodyRow.appendChild(forradalomcell);//hozzaadja a cellat a sorhoz
-
-            const evszamcell = document.createElement('td');//letrehozza a cellat
-            evszamcell.textContent = forr.evszam; //beallitja a cella tartalmat
-            tablebodyRow.appendChild(evszamcell);//hozzaadja a cellat a sorhoz
-
-            const sikerescell = document.createElement('td');//letrehozza a cellat
-            sikerescell.textContent = forr.sikeres; //beallitja a cella tartalmat
-            tablebodyRow.appendChild(sikerescell);//hozzaadja a cellat a sorhoz
-            tbody.appendChild(tablebodyRow);//hozzaadja a sort a tablazathoz
+            this.#forrsorra(forr,tbody)
         })
 
+        this.manager.setTablarendercallback((forradalomok)=>{
+            this.div.querySelector('tbody').innerHTML = '';
+            for (const forradalom of forradalomok) {//a forradalom tomb elemein vegigmegyunk
+                this.#forrsorra(forradalom,tbody);//letrehozza a tablazatot
+            }
+
+    });
+
     }
-
-
+    #forrsorra(forradalom,tbody){//letrehozza a forradalom sort
+        
+        const sor = document.createElement('tr');//letrehozza a sort
+        tbody.appendChild(sor);//hozzaadja a sort a tablazat testhez
+        const forradalomtomb = [forradalom.forradalom, forradalom.evszam, forradalom.sikeres];//letrehozza a forradalom tombot
+        for (const celltartalom of forradalomtomb) {//a tomb elemein vegigmegyunk
+            const cella = document.createElement('td');//letrehozza a cellat
+            cella.innerText = celltartalom;//beallitja a cella tartalmat
+            sor.appendChild(cella);//hozzaadja a cellat a sorhoz
+        }
+    }
 
 
     #tabalazatgen(){//letrehozza a tablazatot
@@ -260,3 +265,6 @@ class Formfield{ //letrehozza a Formfield osztalyt
     return div; // visszaadja a divet   
 }
  }
+
+
+
