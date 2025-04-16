@@ -18,9 +18,9 @@ class Area{ //letrehozza az Area osztalyt
         return this.#manager;//visszaadja a managert
     }
     /**
-    * @param {string} className stringet var parameterul
-    */
-    // constructor letrehozasa className parameterrel
+     * @param {string} className class name parameter
+     * @param {Manager} manager manager objektum
+     */
     constructor(className,manager){ //letrehozza a constructor fuggvenyt
         this.#manager = manager;//beallitja a managert
         const container1 = this.#getContainer(); //meghivja a #getContainer fuggvenyt
@@ -66,7 +66,10 @@ class Table extends Area {
         const tbody = this.#tabalazatgen();//letrehozza a tablazatot 
         
         this.manager.setForradalomhozzaadascallback(this.#forrsorracallback(tbody));//beallitja a tablarendercallbacket
-        this.manager.setTablarendercallback(this.#Tablarendercallback(tbody));//beallitja a tablarendercallbacket
+        this.manager.setTablarendercallback((adatok) => { //beallitja a tablarendercallbacket
+            if (!adatok) return; // csak akkor frissiti a tablazatot, ha van uj adat
+            this.#Tablarendercallback(adatok); //meghivja a tablarendercallbacket
+        });
         }
         /**
  * @param {HTMLElement} tbody a tablazat torzse
@@ -81,7 +84,7 @@ class Table extends Area {
                     }
                 }
             }
-            /**
+/**
  * @param {HTMLElement} tbody a tablazat torzse
  * @returns {Function} visszaadja a forrsorracallback fuggvenyt
  */
@@ -114,7 +117,10 @@ class Table extends Area {
         cella.innerText = tartalom;//beallitja a cella tartalmat
         sor.appendChild(cella);//hozzaadja a cellat a sorhoz
     }
-
+    /**
+     * A tablazat generalasat vegzi el
+     * @returns {HTMLElement} tablebody
+     */
 
 
     #tabalazatgen(){//letrehozza a tablazatot
@@ -134,7 +140,9 @@ class Table extends Area {
     
 }
 }
-
+/**
+ * Az Area osztalybol leszarmazott osztaly, amely urlapot hoz letre
+ */
 class Form extends Area {
 
     #formarray;
@@ -167,12 +175,7 @@ class Form extends Area {
             form.appendChild(button);//hozzaadja a button elemet a formhoz
             return form;//visszaadja a formot
     }
-    #gombletrehozas(label) {//letrehozza a gombot
-        const gomb = document.createElement('button');// letrehozza a gombot
-        gomb.type = 'submit';// beallitja a gomb tipusat
-        gomb.textContent = label;// beallitja a gomb szoveget
-        return gomb;// visszaadja a gombot
-    }
+   
 
 /**
  * @returns {Function} visszaadja a form submit esemenyfigyelojet
@@ -292,12 +295,11 @@ class Formfield{ //letrehozza a Formfield osztalyt
     #labelElement; // privat label elem
     #errorElement; // privat error elem
 
-    /**
-     * @param {string} id - az input elem id-je
-     * @param {HTMLElement} inputElement - az input elem
-     * @param {HTMLElement} labelElement - a label elem
-     * @param {HTMLElement} errorElement - az error elem
-     */
+   /**
+ * letrehoz egy uj Formfield objektumot
+ * @param {string} id  az input elem idje
+ * @param {string} labelContent  a label szovege
+ */
 
     get id(){
         return this.#id;
@@ -344,7 +346,10 @@ class Formfield{ //letrehozza a Formfield osztalyt
         this.#errorElement.className = 'error'; // beallitja az error osztalyt
 
 }
-
+    /**
+     * Az input mezőt tartalmazó div létrehozása
+     * @returns {HTMLElement} - a div, amely az input mezőt tartalmazza
+     */
  Div1(){
     const div = Div('field'); // letrehozza a div elemet
     const br1 = document.createElement('br'); // letrehozza a br elemet

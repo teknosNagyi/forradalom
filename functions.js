@@ -1,4 +1,9 @@
- // Egy fuggveny, ami letrehoz egy div elemet a megadott nevvel
+
+ /**
+ * letrehoz egy div elemet a megadott osztalynevvel
+ * @param {string} className az osztaly neve
+ * @returns {HTMLElement} a letrehozott div elem
+ */
  const Div = (className) => {
     // Letrehoz egy uj div elemet
     const div = document.createElement("div");
@@ -7,6 +12,12 @@
     // Visszaadja a letrehozott div elemet
     return div;
 };
+/**
+ * szuri a tomb elemeit a megadott callback fuggveny alapjan
+ * @param {Array} array a szurendo tomb
+ * @param {Function} callback a szuresi feltetel
+ * @returns {Array} a szurt tomb
+ */
 const filter = (array, callback) => { // letrehoz egy filter fuggvenyt
     const szurtArray = []; // letrehoz egy ures tombot
     for (const element of array) { // vegigmegy a tomb elemein
@@ -16,7 +27,10 @@ const filter = (array, callback) => { // letrehoz egy filter fuggvenyt
     }
     return szurtArray; // visszaadja a tombot
 }
-
+/**
+ * letrehoz egy container divet es hozzaadja a document bodyhoz
+ * @returns {HTMLElement} a letrehozott container div
+ */
 const constinergeneralas = () => {
    // letrehoz egy container divet
    const containerDiv = Div("container")
@@ -26,7 +40,11 @@ const constinergeneralas = () => {
    return containerDiv
 }
 
-// letrehoz egy tablazatot a konteneren belul es visszaadja a tablazat testet
+/**
+ * letrehoz egy tablazatot a megadott konteneren belul
+ * @param {HTMLElement} containerDiv a kontener div
+ * @returns {HTMLElement} a tablazat test (tbody)
+ */
 const Tablazatgeneralas = (containerDiv) => {
    // letrehoz egy table divet
    const tableDiv = Div("table")
@@ -63,7 +81,11 @@ const Tablazatgeneralas = (containerDiv) => {
    return tablebody
 }
 
-// letrehoz egy urlapot a konteneren belul es beallitja az uj elemek hozzaadasat a tablazathoz
+/**
+ * letrehoz egy urlapot a megadott konteneren belul es beallitja az uj elemek hozzaadasat a tablazathoz
+ * @param {HTMLElement} containerDiv a kontener div
+ * @param {HTMLElement} tablebody a tablazat test
+ */
 const formgeneralas = (containerDiv, tablebody) => {
    // letrehoz egy form divet
    const formDiv = Div("form")
@@ -182,7 +204,10 @@ const formgeneralas = (containerDiv, tablebody) => {
        }
    })
 }
-// letrehoz egy uj sort a tablazat testben es feltolti a cellakert
+/* letrehoz egy uj sort a tablazat testben es feltolti a cellakat az objektum adataival
+* @param {HTMLElement} tablebody a tablazat test
+* @param {Object} objektumertek az uj sor adatai
+*/
 const sorhozzadas = (tablebody, objektumertek) => {
    // letrehoz egy uj sort a tablazat testbe
    const tablebodyrow = document.createElement("tr")
@@ -211,7 +236,11 @@ const sorhozzadas = (tablebody, objektumertek) => {
 
 
 
-// letrehoz egy file feltoltes esemenyfigyelot es feltolti a tablazatot a file tartalom alapjan
+/**
+ * letrehoz egy file feltoltes esemenyfigyelot es feltolti a tablazatot a file tartalom alapjan
+ * @param {HTMLElement} containerDiv a kontener div
+ * @param {HTMLElement} tablebody a tablazat test
+ */
 const filefeltoltes = (containerDiv, tablebody) => {
    // letrehoz egy file bemenetet
    const filebemenet = document.createElement("input")
@@ -255,7 +284,10 @@ const filefeltoltes = (containerDiv, tablebody) => {
        reader.readAsText(file)
    })
 }
-// letrehoz egy letoltes gombot es esemenyfigyelot a file letolteshez
+/**
+ * letrehoz egy letoltes gombot es esemenyfigyelot a file letolteshez
+ * @param {HTMLElement} containerDiv a kontener div
+ */
 const letoltes = (containerDiv) => {
    // letrehoz egy letoltes gombot
    const letoltesgomb = document.createElement("button")
@@ -289,7 +321,11 @@ const letoltes = (containerDiv) => {
    })
 }
 
-// letrehoz egy szuro formot a tablazat esemenyek szurtesere
+/**
+ * letrehoz egy szuro formot a tablazat esemenyek szurtesere
+ * @param {HTMLElement} containerDiv a kontener div
+ * @param {HTMLElement} tablebody a tablazat test
+ */
 const szuro = (containerDiv, tablebody) => {
    // letrehoz egy szuroform divet
    const szuroformdiv = Div("szuroform")
@@ -338,38 +374,46 @@ const szuro = (containerDiv, tablebody) => {
    // hozzaadja a gombot a formhoz
    formszuro.appendChild(szurogomb)
    // hozzaadja az esemenyfigyelot a szuro formhoz
-   formszuro.addEventListener("submit", (e) => {
-       // megakadalyozza az alapertelmezett esemenyt
-       e.preventDefault()
-       // lekerni a bemenetet a szurohoz
-       const filterbemenet = e.target.querySelector("#szuroinput")
-       // lekerni a select elemet
-       const selectElem = e.target.querySelector("select")
-       // vegigmegy az array elemein es szur a feltetelekkel
-       const szurttomb = filter(array, (forradalom) => {
-           // ha a select erteke forradalom
-           if (selectElem.value === "forradalom") {
-               // osszehasonlitja a bemenetet a forradalom nevevel
-               return filterbemenet.value == forradalom.forradalom 
-               // ha a select erteke evszam
-           } else if (selectElem.value === "evszam") {
-               // osszehasonlitja a bemenetet a forradalom evszamaval
-               return filterbemenet.value == forradalom.evszam
-               // ha a select erteke sikeres
-           } else if (selectElem.value === "sikeres") {
-               // osszehasonlitja a bemenetet a forradalom sikeressegevel
-               return filterbemenet.value == forradalom.sikeres
-           } else {
-               // ha egyik feltetel sem teljesul
-               return true
-           }
-       })
-       // kiuritjuk a tablazat testet
-       tablebody.innerHTML = ""
-       // vegigmegy az eredmeny tomb elemein
-       for (const szurtelem of szurttomb) {
-           // hozzaadja az uj sort a tablazathoz
-           sorhozzadas(tablebody, szurtelem)
-       }
-   })
+   // létrehozunk egy eredmény divet
+const eredmenyDiv = document.createElement("div") // letrehozunk egy divet az eredmenyeknek
+eredmenyDiv.classList.add("result") // beallitjuk az osztalyt az eredmeny divnek
+containerDiv.appendChild(eredmenyDiv) // hozzaadjuk a divet a kontenerhez
+
+formszuro.addEventListener("submit", (e) => { // hozzaadjuk az esemenyfigyelot a szuro formhoz
+    e.preventDefault() // megakadalyozzuk az alapertelmezett esemenyt
+    const filterbemenet = e.target.querySelector("#szuroinput") // lekerni a szuro input elemet
+    const selectElem = e.target.querySelector("select") // lekerni a select elemet
+
+    // kiszuri azokat akik megfelelnek a feltetelnek
+    const szurttomb = []
+    for (const forradalom of array) { // vegigmegyunk az array elemein
+        let megfelel = false
+        if (selectElem.value === "forradalom") { // ha a select erteke forradalom
+            megfelel = filter2(forradalom.forradalom, filterbemenet.value) // teljes egyezest ellenorizzuk a forradalom nevenel
+        } else if (selectElem.value === "evszam") { // ha a select erteke evszam
+            megfelel = filter2(forradalom.evszam.toString(), filterbemenet.value) // teljes egyezest ellenorizzuk az evszamnal
+        } else if (selectElem.value === "sikeres") { // ha a select erteke sikeres
+            megfelel = filter2(forradalom.sikeres, filterbemenet.value) // teljes egyezest ellenorizzuk a sikeressegnel
+        } else {
+            megfelel = true // ha nincs szuresi feltetel minden elemet visszaad
+        }
+
+        if (megfelel) { // ha az elem megfelel a feltetelnek
+            szurttomb.push(forradalom) // hozzaadjuk az elemet a szurt tombhoz
+        }
+    }
+
+    // kiirjuk hany darab talalat van
+    szurogomb.innerHTML = `a feltetelnek megfelelo elemek szama ${szurttomb.length}`
+})
+
+/**
+ * ellenorzi hogy a ket szoveg teljesen megegyezik e
+ * @param {string} szoveg a cel szoveg amelyben keresunk
+ * @param {string} keresett a keresett szoveg
+ * @returns {boolean} igaz ha a ket szoveg teljesen megegyezik kulonben hamis
+ */
+function filter2(szoveg, keresett) {
+    return szoveg === keresett // visszater igaz ertekkel ha a ket szoveg teljesen megegyezik
+}
 }

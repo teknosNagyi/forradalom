@@ -44,5 +44,6 @@ class Manager{
                 }
             }
             this.#tablarendercallback(eredmeny);//meghivja a tablarendercallbacket
+            return eredmeny;//visszater az eredmennyel
         }
 }

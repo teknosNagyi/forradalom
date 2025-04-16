@@ -35,19 +35,21 @@ class FilterForm extends Area{
         const button = this.gombletrehozasa("szuro") //letrehozza a gombot
         form.appendChild(button); //hozzadja a button elemet a formhoz
 
-        form.addEventListener('submit', (e) => { //letrehozza az eventet
-            e.preventDefault(); //megelozi az alapertelmezett viselkedest
-            const filterbemenet= e.target.querySelector('#szuroinput'); //beallitja a filterbemenetet
-            const kivalasztott = e.target.querySelector('select').value; //beallitja a kivalasztott elemet
-
-            this.manager.filter((forradalom) => { //letrehozza a filtert
-                if(kivalasztott === "") return true; //ha a kivalasztott ures
-                if(kivalasztott === "evszam") { //ha a kivalasztott evszam
-                    return forradalom[kivalasztott] === Number(filterbemenet.value); //visszater az evszammal
+        form.addEventListener('submit', (e) => { // letrehozza az eventet
+            e.preventDefault(); // megelozi az alapertelmezett viselkedest
+            const filterbemenet = e.target.querySelector('#szuroinput'); // beallitja a filterbemenetet
+            const kivalasztott = e.target.querySelector('select').value; // beallitja a kivalasztott elemet
+        
+            const szurttomb = this.manager.filter((forradalom) => { // letrehozza a filtert
+                if (kivalasztott === "") return true; // ha a kivalasztott ures
+                if (kivalasztott === "evszam") { // ha a kivalasztott evszam
+                    return forradalom[kivalasztott] === Number(filterbemenet.value); // visszater az evszammal
                 }
-                return forradalom[kivalasztott] === filterbemenet.value; //visszater a kivalasztott szurovel
+                return forradalom[kivalasztott] === filterbemenet.value; // visszater a kivalasztott szurovel
             });
-});
-            
-}
+        
+            // csak a gomb szoveget frissiti a talalatok szamaval
+            button.textContent = `Talalatok szama: ${szurttomb.length}`;
+        });
+    }
 }
